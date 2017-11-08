@@ -1,0 +1,9 @@
+{
+  "name": "kase",
+  "version": "0.1.0",
+  "description": "Small utility to convert between camel-case, snake-case, kebab-case.",
+  "main": "lib/index.js",
+  "repository": "https://github.com/arccoza/kase",
+  "author": "Adrien <adrien@arccoza.com>",
+  "license": "MIT"
+}
