@@ -4,7 +4,7 @@
   "description": "Small utility to convert between camel-case, snake-case, kebab-case and more.",
   "main": "lib/index.js",
   "repository": "https://github.com/arccoza/kase",
-  "author": "Adrien <adrien@arccoza.com>",
+  "author": "Adrien de Pierres <adrien@arccoza.com>",
   "license": "MIT",
   "keywords": [
     "camel",
