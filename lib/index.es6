@@ -7,10 +7,10 @@ let no = x => x
 
 var cases = {
   auto: true,
-  camel: [/\w|[a-z][A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + up(b) : lo(a)],
-  kebab: [/.-./g, (a, b, up, lo) => b != null ? lo(a) + '-' + lo(b) : lo(a)],
-  snake: [/._./g, (a, b, up, lo) => b != null ? lo(a) + '_' + lo(b) : lo(a)],
-  dot: [/.\../g, (a, b, up, lo) => b != null ? lo(a) + '.' + lo(b) : lo(a)],
+  camel: [/^\w|[a-z][A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + up(b) : lo(a)],
+  kebab: [/^\w|.-./g, (a, b, up, lo) => b != null ? lo(a) + '-' + lo(b) : lo(a)],
+  snake: [/^\w|._./g, (a, b, up, lo) => b != null ? lo(a) + '_' + lo(b) : lo(a)],
+  dot: [/^\w|.\../g, (a, b, up, lo) => b != null ? lo(a) + '.' + lo(b) : lo(a)],
   title: [/^[A-Z]|[a-z] [A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + ' ' + up(b) : up(a)],
   space: '',
   path: '',
