@@ -11,11 +11,11 @@ var cases = {
   kebab: [/^\w|.-./g, (a, b, up, lo) => b != null ? lo(a) + '-' + lo(b) : lo(a)],
   snake: [/^\w|._./g, (a, b, up, lo) => b != null ? lo(a) + '_' + lo(b) : lo(a)],
   dot: [/^\w|.\../g, (a, b, up, lo) => b != null ? lo(a) + '.' + lo(b) : lo(a)],
+  space: [/^\w|. ./g, (a, b, up, lo) => b != null ? lo(a) + ' ' + lo(b) : lo(a)],
+  path: [/^\w|.\/./g, (a, b, up, lo) => b != null ? lo(a) + '/' + lo(b) : lo(a)],
   title: [/^[A-Z]|[a-z] [A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + ' ' + up(b) : up(a)],
-  space: '',
-  path: '',
-  pascal: '',
-  header: '',
+  pascal: [/^[A-Z]|[a-z][A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + up(b) : up(a)],
+  header: [/^[A-Z]|[a-z]-[A-Z]/g, (a, b, up, lo) => b != null ? lo(a) + '-' + up(b) : up(a)],
 }
 
 // var cases = {
