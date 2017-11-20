@@ -15,7 +15,11 @@ let fix = {
   kebab: 'test-case-test-case',
   snake: 'test_case_test_case',
   dot: 'test.case.test.case',
+  space: 'test case test case',
+  path: 'test/case/test/case',
   title: 'Test Case Test Case',
+  pascal: 'TestCaseTestCase',
+  header: 'Test-Case-Test-Case'
 }
 
 
