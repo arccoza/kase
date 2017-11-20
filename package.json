@@ -10,8 +10,12 @@
     "camel",
     "kebab",
     "snake",
-    "pascal",
+    "dot",
+    "space",
+    "path",
     "title",
+    "pascal",
+    "header",
     "capitalize",
     "http"
   ],
