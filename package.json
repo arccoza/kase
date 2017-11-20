@@ -17,7 +17,13 @@
     "pascal",
     "header",
     "capitalize",
-    "http"
+    "http",
+    "simple",
+    "fast",
+    "small",
+    "tiny",
+    "micro",
+    "terse"
   ],
   "scripts": {
     "build": "node taskfile.js",
