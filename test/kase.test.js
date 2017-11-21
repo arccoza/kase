@@ -23,7 +23,8 @@ let fix = {
 }
 
 
-test(`test`, function (t) {
+test(`kase fn should be able to convert between every combination \
+of cases repeatedly, without introducing artifacts.`, function (t) {
   for (let from in fix) {
     for (let to in fix) {
       t.comment(from + ' -> ' + to)
