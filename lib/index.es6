@@ -21,10 +21,9 @@ var cases = {
 }
 
 function kase(str, from, to) {
-  // if (from === to) return str  // Short circuit if no conversion.
+  if (from === to) return str  // Short circuit if no conversion.
   return str.replace(cases[from][0], m => {
     var a = m[0], b = m.length > 1 ? m[m.length - 1] : null
-    print(a, b)
     return cases[to][1](a, b, up, lo)
   })
 }
