@@ -22,17 +22,31 @@ function reParse(pattern, groups=[]) {
 // print(reParse(str, g))
 
 class Regi extends RegExp {
-  constructor(pattern, flags) {
-    var [pattern, groups] = reParse(pattern)
-    super(pattern, flags)
-    this._exec = this.exec
+  constructor(srcPattern, flags) {
+    var [regPattern, groups] = reParse(srcPattern)
+    super(regPattern, flags)
+    Object.defineProperty(this, 'source', {value: srcPattern})
+    this._exec = super.exec
   }
 
   exec(str) {
-    for (let m; m = re._exec(str);) {
-      print(m)
+    var re = this
+    return {
+      index: 0,
+      next() {
+        let tmpIndex = re.lastIndex
+        re.lastIndex = this.index
+        let m = re._exec(str)
+        print(m)
+        if (m == null) return {done: true}
+        if (re.lastIndex === m.index) ++re.lastIndex
+        this.index = re.lastIndex
+        re.lastIndex = tmpIndex
+        return {done: false, value: m}
+      }
     }
   }
 }
 
-new Regi(str)
+var re = new Regi(str)
+print(re.exec('aa').next())
