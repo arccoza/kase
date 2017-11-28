@@ -7,28 +7,55 @@ let no = x => x
 let isUpperCase = str => !(/[a-z]/g).test(str)
 let isLowerCase = str => !(/[A-Z]/g).test(str)
 // let general = (f1, sep, f2, f3) => (a, b) => a != null ? f1(a) + sep + f2(b) : f3(b)
-let reGen = (fst, bef, sep, aft) => RegExp(`^${fst}|${bef}${sep}${aft}`, 'g')
+// let reGen = (fst, bef, sep, aft) => RegExp(`^${fst}|${bef}${sep}${aft}`, 'g')
+let isAnyDig = str => (/\d/g).test(str)
 
 var cases = {
-  any: [/^.|.[-_. /].|[a-z][A-Z]/g],
-  camel: [/^.|[a-z][A-Z]|\d\.\d/g, (a, b) => a != null ? lo(a) + up(b) : lo(b)],
-  kebab: [/^.|.-./g, (a, b) => a != null ? lo(a) + '-' + lo(b) : lo(b)],
-  snake: [/^.|._./g, (a, b) => a != null ? lo(a) + '_' + lo(b) : lo(b)],
-  dot: [/^.|.\../g, (a, b) => a != null ? lo(a) + '.' + lo(b) : lo(b)],
-  space: [/^.|. ./g, (a, b) => a != null ? lo(a) + ' ' + lo(b) : lo(b)],
-  path: [/^.|.\/./g, (a, b) => a != null ? lo(a) + '/' + lo(b) : lo(b)],
-  title: [/^[A-Z]|[a-z] [A-Z]/g, (a, b) => a != null ? lo(a) + ' ' + up(b) : up(b)],
-  pascal: [/^[A-Z]|[a-z][A-Z]/g, (a, b) => a != null ? lo(a) + up(b) : up(b)],
-  header: [/^[A-Z]|[a-z]-[A-Z]/g, (a, b) => a != null ? lo(a) + '-' + up(b) : up(b)],
+  all: [/^.|.[-_. /]+.|[a-z][A-Z]/g],
+  any: [/(^[^a-zA-Z0-9]*(.))|((.?)[^a-zA-Z0-9]+(.?))|(([a-z])([A-Z]))/g],
+  camel: [/(^_*([^a-z]))|((\d?)_+(\d?))|(([a-z])([A-Z]))/g,
+    (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : lo(b)],
+  kebab: [/^-*.|.?-+.?/g,
+    (a, b) => a != null ? lo(a) + '-' + lo(b) : lo(b)],
+  snake: [/^.|._./g,
+    (a, b) => a != null ? lo(a) + '_' + lo(b) : lo(b)],
+  dot: [/^.|.\../g,
+    (a, b) => a != null ? lo(a) + '.' + lo(b) : lo(b)],
+  space: [/^.|. ./g,
+    (a, b) => a != null ? lo(a) + ' ' + lo(b) : lo(b)],
+  path: [/^.|.\/./g,
+    (a, b) => a != null ? lo(a) + '/' + lo(b) : lo(b)],
+  title: [/^[A-Z]|[a-z] [A-Z]/g,
+    (a, b) => a != null ? lo(a) + ' ' + up(b) : up(b)],
+  pascal: [/^[A-Z]|[a-z][A-Z]/g,
+    (a, b) => a != null ? lo(a) + up(b) : up(b)],
+  header: [/^[A-Z]|[a-z]-[A-Z]/g,
+    (a, b) => a != null ? lo(a) + '-' + up(b) : up(b)],
 }
 
 function kase(str, from, to) {
   if (from === to) return str  // Short circuit if no conversion.
-  return str.replace(cases[from][0], m => {
-    var len = m.length, b = m[len - 1], a = len > 1 ? m[0] : null
-    return cases[to][1](a, b)
+  var re = cases[from][0], fn = cases[to][1]
+
+  return str.replace(re, (...m) => {
+    var len = m.length, mch = m[0], subs = m.slice(1, -2), i = m[len - 2], v = m[len - 1]
+
+    var [a, b] =
+      subs[0] != null ? [null, subs[1]] :
+      subs[2] != null ? [subs[3], subs[4]] :
+      subs[5] != null ? [subs[6], subs[7]] :
+      [null, null]
+    print(a, b)
+    // var a = v[i - 1], b = v[i + 1]
+    // var len = m.length, b = m[len - 1], a = len > 1 ? m[0] : null
+    // print(m, a + b, isAnyDig(a + b))
+    return fn(a, b)
   })
 }
+
+// for (let m, re = cases[from][0], fn = cases[to][1]; m = re.exec(str);) {
+//     print(m)
+//   }
 
 kase.isUpper = kase.isUpperCase = isUpperCase
 kase.isLower = kase.isLowerCase = isLowerCase
