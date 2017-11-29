@@ -46,7 +46,7 @@ class Regi extends RegExp {
     Object.defineProperty(this, '_exec', {value: super.exec, writable: false})
   }
 
-  exec(str) {
+  iterator(str) {
     var re = this, tmpIndex = 0
     return {
       index: 0,
@@ -58,11 +58,26 @@ class Regi extends RegExp {
         if (re.lastIndex === m.index) { ++re.lastIndex }
 
         [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
-        return {done: false, value: matchMaker(m, re._labels)}
+        return {done: false, value: matchMaker(re._labels, m)}
       }
     }
+  }
+
+  exec(str) {
+    var re = this
+    re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
+    let res = re._it.next()
+    if (res.done) return null
+    return res.value
+  }
+
+  replace(str, rep) {
+    var re = this
+    return str.replace(re, (...m) => {
+      print(matchMaker(re._labels, m.slice(0, -2), ...m.slice(-2)))
+    })
   }
 }
 
 var re = new Regi(str)
-print(re.exec('aa').next())
+print(re.replace('aaaa', 'b'), re.lastIndex)
