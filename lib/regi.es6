@@ -18,6 +18,10 @@ function reParse(pattern, groups=[]) {
   }), groups]
 }
 
+function matchMaker(m) {
+  print(m)
+}
+
 // var g = []
 // print(reParse(str, g))
 
