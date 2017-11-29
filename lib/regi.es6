@@ -25,8 +25,10 @@ class Regi extends RegExp {
   constructor(srcPattern, flags) {
     var [regPattern, groups] = reParse(srcPattern)
     super(regPattern, flags)
-    Object.defineProperty(this, 'source', {value: srcPattern})
-    this._exec = super.exec
+
+    Object.defineProperty(this, 'source', {value: srcPattern, writable: false})
+    Object.defineProperty(this, '_named', {value: groups, writable: false})
+    Object.defineProperty(this, '_exec', {value: super.exec, writable: false})
   }
 
   exec(str) {
