@@ -36,19 +36,18 @@ class Regi extends RegExp {
   }
 
   exec(str) {
-    var re = this
+    var re = this, tmpIndex = 0
     return {
       index: 0,
       next() {
-        let tmpIndex = re.lastIndex
-        re.lastIndex = this.index
+        [tmpIndex, re.lastIndex] = [re.lastIndex, this.index]
         let m = re._exec(str)
-        print(m)
+
         if (m == null) return {done: true}
-        if (re.lastIndex === m.index) ++re.lastIndex
-        this.index = re.lastIndex
-        re.lastIndex = tmpIndex
-        return {done: false, value: m}
+        if (re.lastIndex === m.index) { ++re.lastIndex }
+
+        [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
+        return {done: false, value: matchMaker(m)}
       }
     }
   }
