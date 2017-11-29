@@ -55,6 +55,9 @@ class Regi extends RegExp {
         let m = re._exec(str)
 
         if (m == null) return {done: true}
+        // TODO: Handle stuck indices better, cos simply increasing
+        // the index pointer to avoid infinite loops means that
+        // an index that is off by 1 is somtimes stored in the iterator.
         if (re.lastIndex === m.index) { ++re.lastIndex }
 
         [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
@@ -83,6 +86,7 @@ class Regi extends RegExp {
     return str.replace(re, (...m) =>  {
       m = matchMaker(re._labels, m.slice(0, -2), ...m.slice(-2))
       if (typeof rep === 'function') return rep(m)
+      // TODO: parse `rep` string for named groups, via `${name}`.
       return rep
     })
   }
