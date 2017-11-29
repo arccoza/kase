@@ -3,19 +3,19 @@ var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g
 var str = `((?<foo>aa))|(bc)(?<foo>.)`
 
 
-function reParse(pattern, groups=[]) {
+function reParse(pattern, labels=[]) {
   return [pattern.replace(reNamed, (m, v, i) => {
     // print(m, v, i)
     if (v != null) {
-      groups.push(v)
+      labels.push(v)
       return '('
     }
 
     if (pattern[i + 1] !== '?' && pattern[i - 1] !== '\\')
-      groups.push(null)
+      labels.push(null)
 
     return m
-  }), groups]
+  }), labels]
 }
 
 function matchMaker(src, labels) {
@@ -25,7 +25,7 @@ function matchMaker(src, labels) {
     input: src.input,
     value: src[0],
   }
-  // print(src, groups)
+  // print(src, labels)
   return match
 }
 
@@ -34,11 +34,11 @@ function matchMaker(src, labels) {
 
 class Regi extends RegExp {
   constructor(srcPattern, flags) {
-    var [regPattern, groups] = reParse(srcPattern)
+    var [regPattern, labels] = reParse(srcPattern)
     super(regPattern, flags)
 
     Object.defineProperty(this, 'source', {value: srcPattern, writable: false})
-    Object.defineProperty(this, '_groups', {value: groups, writable: false})
+    Object.defineProperty(this, '_labels', {value: labels, writable: false})
     Object.defineProperty(this, '_exec', {value: super.exec, writable: false})
   }
 
@@ -54,7 +54,7 @@ class Regi extends RegExp {
         if (re.lastIndex === m.index) { ++re.lastIndex }
 
         [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
-        return {done: false, value: matchMaker(m, [...re._groups])}
+        return {done: false, value: matchMaker(m, re._labels)}
       }
     }
   }
