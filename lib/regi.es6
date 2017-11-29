@@ -23,7 +23,13 @@ function matchMaker(src, labels) {
     groups: src.slice(1),
     index: src.index,
     input: src.input,
+    labels: {},
     value: src[0],
+  }
+
+  for (let i = 0, k, v, len = labels.length; k = labels[i], v = match.groups[i], i < len; i++) {
+    if (k == null || v == null) continue
+    match.labels[k] = match.groups[i]
   }
   // print(src, labels)
   return match
