@@ -29,7 +29,7 @@ function matchMaker(src, labels) {
 
   for (let i = 0, k, v, len = labels.length; k = labels[i], v = match.groups[i], i < len; i++) {
     if (k == null || v == null) continue
-    match.labels[k] = match.groups[i]
+    match.labels[k] = v
   }
   // print(src, labels)
   return match
