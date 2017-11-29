@@ -66,8 +66,15 @@ class Regi extends RegExp {
   exec(str) {
     var re = this
     re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
+
     let res = re._it.next()
-    if (res.done) return null
+    re.lastIndex = re._it.index
+
+    if (res.done === true) {
+      re.lastIndex = 0
+      return null
+    }
+
     return res.value
   }
 
@@ -79,5 +86,8 @@ class Regi extends RegExp {
   }
 }
 
-var re = new Regi(str)
-print(re.replace('aaaa', 'b'), re.lastIndex)
+var re = new Regi(str, 'g')
+var it = re.iterator('aaaa')
+// print(it.next(), it.next(), it.next(), it.next())
+print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
+// print(re.replace('aaaa', 'b'), re.lastIndex)
