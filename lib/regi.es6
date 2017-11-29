@@ -18,8 +18,15 @@ function reParse(pattern, groups=[]) {
   }), groups]
 }
 
-function matchMaker(m) {
-  print(m)
+function matchMaker(src, labels) {
+  let match = {
+    groups: src.slice(1),
+    index: src.index,
+    input: src.input,
+    value: src[0],
+  }
+  // print(src, groups)
+  return match
 }
 
 // var g = []
@@ -31,7 +38,7 @@ class Regi extends RegExp {
     super(regPattern, flags)
 
     Object.defineProperty(this, 'source', {value: srcPattern, writable: false})
-    Object.defineProperty(this, '_named', {value: groups, writable: false})
+    Object.defineProperty(this, '_groups', {value: groups, writable: false})
     Object.defineProperty(this, '_exec', {value: super.exec, writable: false})
   }
 
@@ -47,7 +54,7 @@ class Regi extends RegExp {
         if (re.lastIndex === m.index) { ++re.lastIndex }
 
         [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
-        return {done: false, value: matchMaker(m)}
+        return {done: false, value: matchMaker(m, [...re._groups])}
       }
     }
   }
