@@ -80,8 +80,10 @@ class Regi extends RegExp {
 
   replace(str, rep) {
     var re = this
-    return str.replace(re, (...m) => {
-      print(matchMaker(re._labels, m.slice(0, -2), ...m.slice(-2)))
+    return str.replace(re, (...m) =>  {
+      m = matchMaker(re._labels, m.slice(0, -2), ...m.slice(-2))
+      if (typeof rep === 'function') return rep(m)
+      return rep
     })
   }
 }
@@ -89,5 +91,5 @@ class Regi extends RegExp {
 var re = new Regi(str, 'g')
 var it = re.iterator('aaaa')
 // print(it.next(), it.next(), it.next(), it.next())
-print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
-// print(re.replace('aaaa', 'b'), re.lastIndex)
+// print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
+print(re.replace('aabcd', 'b'), re.lastIndex)
