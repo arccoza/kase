@@ -67,6 +67,9 @@ class Regi extends RegExp {
   }
 
   exec(str) {
+    // TODO: Simplify `exec` by simply calling `_exec` and
+    // bundling the match with `matchMaker` fn.
+    // No need to get an iterator.
     var re = this
     re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
 
