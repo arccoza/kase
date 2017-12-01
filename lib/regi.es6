@@ -70,18 +70,24 @@ class Regi extends RegExp {
     // TODO: Simplify `exec` by simply calling `_exec` and
     // bundling the match with `matchMaker` fn.
     // No need to get an iterator.
+    // var re = this
+    // re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
+
+    // let res = re._it.next()
+    // re.lastIndex = re._it.index
+
+    // if (res.done === true) {
+    //   re.lastIndex = 0
+    //   return null
+    // }
+
+    // return res.value
+
     var re = this
-    re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
-
-    let res = re._it.next()
-    re.lastIndex = re._it.index
-
-    if (res.done === true) {
-      re.lastIndex = 0
-      return null
-    }
-
-    return res.value
+    var m = re._exec(str)
+    if (m == null) return m
+    if (re.lastIndex === m.index) { ++re.lastIndex }
+    return matchMaker(re._labels, m)
   }
 
   replace(str, rep) {
@@ -95,8 +101,11 @@ class Regi extends RegExp {
   }
 }
 
+export {Regi}
+
 var re = new Regi(str, 'g')
+print(re.iterator)
 var it = re.iterator('aaaa')
-// print(it.next(), it.next(), it.next(), it.next())
-// print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
+print(it.next(), it.next(), it.next(), it.next())
+print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
 print(re.replace('aabcd', 'b'), re.lastIndex)
