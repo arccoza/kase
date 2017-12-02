@@ -36,23 +36,35 @@ function matchMaker(labels, match, index, input) {
 // var g = []
 // print(reParse(str, g))
 
-class Regi extends RegExp {
-  constructor(srcPattern, flags) {
-    var [regPattern, labels] = reParse(srcPattern)
-    super(regPattern, flags)
+function Regi(srcPattern, flags) {
+  var [regPattern, labels] = reParse(srcPattern)
 
-    Object.defineProperty(this, 'source', {value: srcPattern, writable: false})
-    Object.defineProperty(this, '_labels', {value: labels, writable: false})
-    Object.defineProperty(this, '_exec', {value: super.exec, writable: false})
-  }
+  Object.defineProperty(this, '_re', {value: new RegExp(regPattern, flags), writable: false})
+  Object.defineProperty(this, '_labels', {value: labels, writable: false})
+  Object.defineProperty(this, '_pattern', {value: srcPattern, writable: false})
 
+  return this
+}
+
+Regi.prototype = Object.create(RegExp.prototype, {
+  lastIndex: {get() {return this._re.lastIndex}, set(v) {this._re.lastIndex = v}},
+  flags: {get() {return this._re.flags}},
+  global: {get() {return this._re.global}},
+  ignoreCase: {get() {return this._re.ignoreCase}},
+  multiline: {get() {return this._re.multiline}},
+  source: {get() {return this._pattern}},
+  sticky: {get() {return this._re.sticky}},
+  unicode: {get() {return this._re.unicode}},
+})
+
+Object.assign(Regi.prototype, {
   iterator(str) {
-    var re = this, tmpIndex = 0
+    var re = this._re, labels = this._labels, tmpIndex = 0
     return {
       index: 0,
       next() {
         [tmpIndex, re.lastIndex] = [re.lastIndex, this.index]
-        let m = re._exec(str)
+        let m = re.exec(str)
 
         if (m == null) return {done: true}
         // TODO: Handle stuck indices better, cos simply increasing
@@ -61,10 +73,10 @@ class Regi extends RegExp {
         if (re.lastIndex === m.index) { ++re.lastIndex }
 
         [re.lastIndex, this.index] = [tmpIndex, re.lastIndex]
-        return {done: false, value: matchMaker(re._labels, m)}
+        return {done: false, value: matchMaker(labels, m)}
       }
     }
-  }
+  },
 
   exec(str) {
     // TODO: Simplify `exec` by simply calling `_exec` and
@@ -83,29 +95,31 @@ class Regi extends RegExp {
 
     // return res.value
 
-    var re = this
-    var m = re._exec(str)
+    var re = this._re, labels = this._labels
+    var m = re.exec(str)
     if (m == null) return m
     if (re.lastIndex === m.index) { ++re.lastIndex }
-    return matchMaker(re._labels, m)
-  }
+    return matchMaker(labels, m)
+  },
 
   replace(str, rep) {
-    var re = this
+    var re = this._re, labels = this._labels
     return str.replace(re, (...m) =>  {
-      m = matchMaker(re._labels, m.slice(0, -2), ...m.slice(-2))
+      m = matchMaker(labels, m.slice(0, -2), ...m.slice(-2))
       if (typeof rep === 'function') return rep(m)
       // TODO: parse `rep` string for named groups, via `${name}`.
       return rep
     })
-  }
-}
+  },
+})
 
 export {Regi}
 
-var re = new Regi(str, 'g')
-print(re.iterator)
-var it = re.iterator('aaaa')
-print(it.next(), it.next(), it.next(), it.next())
-print(re.exec('aabcd'), re.exec('aaaa'), re.exec('aaaa'))
-print(re.replace('aabcd', 'b'), re.lastIndex)
+// var re = new Regi(str, 'g')
+// print(re.iterator)
+// var it = re.iterator('aabcd')
+// print(it.next(), it.index, it.next(), it.index, it.next(), it.index, it.next())
+// print(re.exec('aabcd'), re.lastIndex, re.exec('aabcd'), re.lastIndex, re.exec('aabcd'), re.lastIndex)
+// print(re.replace('aabcd', 'b'), re.lastIndex)
+// print('aabcd'.replace(re, 'b'))
+// print('12aabcd'.match(re))
