@@ -79,22 +79,6 @@ Object.assign(Regi.prototype, {
   },
 
   exec(str) {
-    // TODO: Simplify `exec` by simply calling `_exec` and
-    // bundling the match with `matchMaker` fn.
-    // No need to get an iterator.
-    // var re = this
-    // re._it = re.lastIndex === 0 ? re.iterator(str) : re._it
-
-    // let res = re._it.next()
-    // re.lastIndex = re._it.index
-
-    // if (res.done === true) {
-    //   re.lastIndex = 0
-    //   return null
-    // }
-
-    // return res.value
-
     var re = this._re, labels = this._labels
     var m = re.exec(str)
     if (m == null) return m
