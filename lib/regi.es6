@@ -19,13 +19,15 @@ function reParse(pattern, labels=[]) {
 }
 
 function matchMaker(labels, match, index, input) {
-    match.groups = match.slice(1),
-    match.index = match.index != null ? match.index : index
-    match.input = match.input != null ? match.input : input
-    match.labels = {}
-    match.value = match[0]
+  match.groups = new Array(match.length - 1)
+  for (let i = 1; i < match.length; match.groups[i - 1] = match[i++]);
+  // match.groups = match.slice(1)
+  match.index = match.index != null ? match.index : index
+  match.input = match.input != null ? match.input : input
+  match.labels = {}
+  match.value = match[0]
 
-  for (let i = 0, k, v, len = labels.length; k = labels[i], v = match.groups[i], i < len; i++) {
+  for (let i = 0, k, v, len = labels.length; k = labels[i], v = match[i+1], i < len; i++) {
     if (k == null || v == null) continue
     match.labels[k] = v
   }
