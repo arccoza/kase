@@ -1,4 +1,5 @@
 var print = console.log.bind(console)
+var {Regi} = require('./regi')
 
 
 let up = x => x.toUpperCase()
@@ -12,7 +13,8 @@ let isAnyDig = str => (/\d/g).test(str)
 
 var cases = {
   all: [/^.|.[-_. /]+.|[a-z][A-Z]/g],
-  any: [/(([a-z]?)([A-Z])|([A-Z]?)([A-Z]))|((.?)[^a-zA-Z0-9]+(.?))|(^[^a-zA-Z0-9]*(.))/g],
+  // any: [/(([a-z]?)([A-Z])|([A-Z]?)([A-Z]))|((.?)[^a-zA-Z0-9]+(.?))|(^[^a-zA-Z0-9]*(.))/g],
+  any: [new Regi(`((?<a>[a-z]?)(?<b>[A-Z])|(?<a>[A-Z]?)(?<b>[A-Z]))|((?<a>.?)[^a-zA-Z0-9]+(?<b>.?))|(^[^a-zA-Z0-9]*(?<b>.))`, 'g')],
   camel: [/(([a-z])([A-Z]))|((\d?)_+(\d?))|(^_*(.))/g,
     (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : lo(b)],
   kebab: [/((.?)-+(.?))|(^-*(.))/g,
@@ -37,20 +39,7 @@ function kase(str, from, to) {
   if (from === to) return str  // Short circuit if no conversion.
   var re = cases[from][0], fn = cases[to][1]
 
-  return str.replace(re, (...m) => {
-    var len = m.length, mch = m[0], subs = m.slice(1, -2), i = m[len - 2], v = m[len - 1]
-
-    var [a, b] =
-      subs[0] != null ? [subs[1], subs[2]] :
-      subs[3] != null ? [subs[4], subs[5]] :
-      subs[6] != null ? [null, subs[7]] :
-      [null, null]
-    print(a, b)
-    // var a = v[i - 1], b = v[i + 1]
-    // var len = m.length, b = m[len - 1], a = len > 1 ? m[0] : null
-    // print(m, a + b, isAnyDig(a + b))
-    return fn(a, b)
-  })
+  return re.replace(str, ({labels: {a, b}}) => fn(a, b))
 }
 
 // for (let m, re = cases[from][0], fn = cases[to][1]; m = re.exec(str);) {
