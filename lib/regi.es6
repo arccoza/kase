@@ -1,3 +1,4 @@
+'use strict'
 var print = console.log.bind(console)
 var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g
 var str = `((?<foo>aa))|(bc)(?<foo>.)`
