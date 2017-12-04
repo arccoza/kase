@@ -91,8 +91,10 @@ Object.assign(Regi.prototype, {
   replace(str, rep) {
     var re = this._re, labels = this._labels
     return str.replace(re, (...m) =>  {
-      m = matchMaker(labels, m.slice(0, -2), ...m.slice(-2))
-      if (typeof rep === 'function') return rep(m)
+      var len = m.length, idx = m[len - 2], inp = m[len - 1], mch
+      m.length = len - 2
+      mch = matchMaker(labels, m, idx, inp)
+      if (typeof rep === 'function') return rep(mch)
       // TODO: parse `rep` string for named groups, via `${name}`.
       return rep
     })
