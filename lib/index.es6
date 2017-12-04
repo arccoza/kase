@@ -12,10 +12,10 @@ let isAnyDig = str => (/\d/g).test(str)
 
 var cases = {
   all: [/^.|.[-_. /]+.|[a-z][A-Z]/g],
-  any: [/(([a-z])([A-Z]))|((.?)[^a-zA-Z0-9]+(.?))|(^[^a-zA-Z0-9]*(.))/g],
+  any: [/(([a-z]?)([A-Z])|([A-Z]?)([A-Z]))|((.?)[^a-zA-Z0-9]+(.?))|(^[^a-zA-Z0-9]*(.))/g],
   camel: [/(([a-z])([A-Z]))|((\d?)_+(\d?))|(^_*(.))/g,
     (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : lo(b)],
-  kebab: [/^-*.|.?-+.?/g,
+  kebab: [/((.?)-+(.?))|(^-*(.))/g,
     (a, b) => a != null ? lo(a) + '-' + lo(b) : lo(b)],
   snake: [/^.|._./g,
     (a, b) => a != null ? lo(a) + '_' + lo(b) : lo(b)],
