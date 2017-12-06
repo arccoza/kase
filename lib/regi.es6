@@ -4,11 +4,12 @@ var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g
 var str = `((?<foo>aa))|(bc)(?<foo>.)`
 
 
-function reParse(pattern, labels=[]) {
+function reParse(pattern, labels=[], reReplace={}) {
   return [pattern.replace(reNamed, (m, v, i) => {
     // print(m, v, i)
     if (v != null) {
       labels.push(v)
+      reReplace[`\\$(${v})`] = true
       return '('
     }
 
@@ -16,7 +17,7 @@ function reParse(pattern, labels=[]) {
       labels.push(null)
 
     return m
-  }), labels]
+  }), labels, new RegExp(Object.keys(reReplace).join('|'), 'g')]
 }
 
 function matchMaker(labels, match, index, input) {
@@ -40,11 +41,13 @@ function matchMaker(labels, match, index, input) {
 // print(reParse(str, g))
 
 function Regi(srcPattern, flags) {
-  var [regPattern, labels] = reParse(srcPattern)
+  var [regPattern, labels, reReplace] = reParse(srcPattern)
+  print(reReplace)
 
   Object.defineProperty(this, '_re', {value: new RegExp(regPattern, flags), writable: false})
   Object.defineProperty(this, '_labels', {value: labels, writable: false})
   Object.defineProperty(this, '_pattern', {value: srcPattern, writable: false})
+  Object.defineProperty(this, '_replacer', {value: reReplace, writable: false})
 
   return this
 }
@@ -95,9 +98,12 @@ Object.assign(Regi.prototype, {
       var len = m.length, idx = m[len - 2], inp = m[len - 1], mch
       m.length = len - 2
       mch = matchMaker(labels, m, idx, inp)
+
       if (typeof rep === 'function') return rep(mch)
-      // TODO: parse `rep` string for named groups, via `${name}`.
-      return rep
+      return rep.replace(this._replacer, (m) => {
+        let r = mch.labels[m.slice(1)]
+        return r == null ? '' : r
+      })
     })
   },
 })
