@@ -1,13 +1,16 @@
 'use strict'
 var print = console.log.bind(console)
 var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g
+var reReplaceEscapes = '(?:\\${2})+|'  // Matches any `$` with a preceding `$`.
 var str = `((?<foo>aa))|(bc)(?<foo>.)`
 
 
 function reParse(pattern, labels=[], reReplace={}) {
-  return [pattern.replace(reNamed, (m, v, i) => {
+  var hasLabels = false  // Used to indicate if there are named groups in the `pattern`.
+  pattern = pattern.replace(reNamed, (m, v, i) => {
     // print(m, v, i)
     if (v != null) {
+      hasLabels = true
       labels.push(v)
       reReplace[`\\$(${v})`] = true
       return '('
@@ -17,7 +20,11 @@ function reParse(pattern, labels=[], reReplace={}) {
       labels.push(null)
 
     return m
-  }), labels, new RegExp(Object.keys(reReplace).join('|'), 'g')]
+  })
+
+  reReplace = hasLabels ? new RegExp(reReplaceEscapes + Object.keys(reReplace).join('|'), 'g') : null
+
+  return [pattern, labels, reReplace]
 }
 
 function matchMaker(labels, match, index, input) {
@@ -101,6 +108,15 @@ Object.assign(Regi.prototype, {
 
       if (typeof rep === 'function') return rep(mch)
       return rep.replace(this._replacer, (m) => {
+        let len = m.length
+        // If the last character of the match is `$`, then we've matched
+        // an escape sequence, with `reReplaceEscapes`, and must replace
+        // the number of `$`s with half as many.
+        if (m[len - 1] === '$')
+          return '$'.repeat(len/2)
+
+        // Otherwise we trim the leading dollar off the match, and look
+        // for the associated label, matched earlier, for the replacement.
         let r = mch.labels[m.slice(1)]
         return r == null ? '' : r
       })
