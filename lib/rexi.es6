@@ -47,7 +47,7 @@ function matchMaker(labels, match, index, input) {
 // var g = []
 // print(reParse(str, g))
 
-function Regi(srcPattern, flags) {
+function Rexi(srcPattern, flags) {
   var [regPattern, labels, reReplace] = reParse(srcPattern)
   print(reReplace)
 
@@ -59,7 +59,7 @@ function Regi(srcPattern, flags) {
   return this
 }
 
-Regi.prototype = Object.create(RegExp.prototype, {
+Rexi.prototype = Object.create(RegExp.prototype, {
   lastIndex: {get() {return this._re.lastIndex}, set(v) {this._re.lastIndex = v}},
   flags: {get() {return this._re.flags}},
   global: {get() {return this._re.global}},
@@ -70,7 +70,7 @@ Regi.prototype = Object.create(RegExp.prototype, {
   unicode: {get() {return this._re.unicode}},
 })
 
-Object.assign(Regi.prototype, {
+Object.assign(Rexi.prototype, {
   iterator(str) {
     var re = this._re, labels = this._labels, tmpIndex = 0
     return {
@@ -124,9 +124,9 @@ Object.assign(Regi.prototype, {
   },
 })
 
-export {Regi}
+export {Rexi}
 
-// var re = new Regi(str, 'g')
+// var re = new Rexi(str, 'g')
 // print(re.iterator)
 // var it = re.iterator('aabcd')
 // print(it.next(), it.index, it.next(), it.index, it.next(), it.index, it.next())
