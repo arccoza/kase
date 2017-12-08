@@ -49,7 +49,7 @@ function matchMaker(labels, match, index, input) {
 
 function Rexi(srcPattern, flags) {
   var [regPattern, labels, reReplace] = reParse(srcPattern)
-  print(reReplace)
+  // print(reReplace)
 
   Object.defineProperty(this, '_re', {value: new RegExp(regPattern, flags), writable: false})
   Object.defineProperty(this, '_labels', {value: labels, writable: false})
@@ -121,6 +121,14 @@ Object.assign(Rexi.prototype, {
         return r == null ? '' : r
       })
     })
+  },
+
+  toString() {
+    return this.source
+  },
+
+  valueOf() {
+    return this._re.valueOf()
   },
 })
 
