@@ -8,7 +8,6 @@ var str = `((?<foo>aa))|(bc)(?<foo>.)`
 function reParse(pattern, labels=[], reReplace={}) {
   var hasLabels = false  // Used to indicate if there are named groups in the `pattern`.
   pattern = pattern.replace(reNamed, (m, v, i) => {
-    // print(m, v, i)
     if (v != null) {
       hasLabels = true
       labels.push(v)
