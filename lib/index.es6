@@ -57,12 +57,13 @@ function kase(str, from, to) {
 
   for(let m, a, b; m = re.exec(str); pre = cur + len) {
     ({labels: {a, b}, index: cur, value: {length: len}} = m)
+    if (!a && !b) continue  // If `a` and `b` are blank, skip.
     // Grab the unmatched parts of the string, and add them to the result.
     cur > pre && (res += str.substring(pre, cur).toLowerCase())
     // If `fn` doesn't exist use `generic` with `to` arg as seperator.
     res += fn && fn(a, b) || generic(a, b, to)
   }
-  res += str.substring(pre).toLowerCase()
+  res += str.substring(pre).toLowerCase()  // Grab the leftovers and add to the result.
 
   return res
 }
