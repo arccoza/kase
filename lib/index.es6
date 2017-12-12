@@ -40,9 +40,16 @@ var cases = {
 }
 
 function kase(str, from, to) {
-  if (from === to) return str  // Short circuit if no conversion.
-  var re = cases[from][0], fn = cases[to][1]
-  print(re.source)
+  var re, fn
+  if (from == to) return str  // Short circuit if no conversion.
+  if (from != null && to == null)
+    [from, to] = ['any', from]
+
+  if (!(cases[from] && (re = cases[from][0])))
+    throw new ReferenceError('Not a valid `from` argument.')
+
+  if (!(cases[to] && (fn = cases[to][1])))
+    no()
 
   return re.replace(str, ({labels: {a, b}}) => fn(a, b))
   // return re.replace(str, '$a-$b')
