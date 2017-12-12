@@ -51,6 +51,20 @@ function repeat(str, count){
   return res
 }
 
+function slice(arr, start, end) {
+  let Arr = arr.constructor, len = arr.length
+  start = start == null ? 0 : start < 0 ? start + len : start > len ? len : start
+  end = end == null ? len : end < 0 ? end + len : end > len ? len : end
+  start < 0 && (start = 0)
+  end < 0 && (end = 0)
+
+  if (start >= len || start >= end) return new Arr()
+
+  let snip = new Arr(end - start), i = start
+  for (; i < end; snip[i - start] = arr[i++]);
+  return snip
+}
+
 function Rexi(srcPattern, flags) {
   var [regPattern, labels, reReplace] = reParse(srcPattern)
 
