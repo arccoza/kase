@@ -80,3 +80,11 @@ Convert `str` from `from` case style to `to` case style, return the modified `st
 ### kase(str, to)
 
 Convert `str` to `to` case style, `from` is automatically set to `any`, return the modified `str`.
+
+### kase.isUpper(str) / kase.isUpperCase(str) / isUpperCase(str)
+
+Return `true` if all characters in `str` are uppercase, `false` otherwise.
+
+### kase.isLower(str) / kase.isLowerCase(str) / isLowerCase(str)
+
+Return `true` if all characters in `str` are lowercase, `false` otherwise.
