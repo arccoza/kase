@@ -45,7 +45,7 @@ function matchMaker(labels, match, index, input) {
 }
 
 function repeat(str, count){
-  var res = '', n = count
+  let res = '', n = count
   if (n < 0 || n == Infinity) throw RangeError("Count can't be negative")
   for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) res += str
   return res
