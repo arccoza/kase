@@ -15,6 +15,7 @@ let reParts = {
   split(sep, a='.', b='.') {return `((?<a>${a}?)${sep || this.nonWord}+(?<b>${b}))`},
   digit(sep) {return `((?<a>\\d?)${sep || this.nonWord}+(?<b>\\d))`},
 }
+let generic = (a, b, sep) => a != null ? lo(a) + sep + lo(b) : lo(b)
 
 var cases = {
   // any: [new Rexi(`((?<a>[a-z])(?<b>[A-Z])|(?<a>[A-Z])(?<b>[A-Z])(?=[a-z]))|(^[^a-zA-Z0-9]*(?<b>.))|((?<a>.?)[^a-zA-Z0-9]+(?<b>.?))`, 'g')],
@@ -49,9 +50,9 @@ function kase(str, from, to) {
     throw new ReferenceError('Not a valid `from` argument.')
 
   if (!(cases[to] && (fn = cases[to][1])))
-    no()
+    fn = false
 
-  return re.replace(str, ({labels: {a, b}}) => fn(a, b))
+  return re.replace(str, ({labels: {a, b}}) => fn && fn(a, b) || generic(a, b, to))
   // return re.replace(str, '$a-$b')
 }
 
