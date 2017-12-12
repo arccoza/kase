@@ -28,6 +28,7 @@ function reParse(pattern, labels=[], reReplace={}) {
 }
 
 function matchMaker(labels, match, index, input) {
+  // Faster alg to slice an array than Array.slice native.
   match.groups = new Array(match.length - 1)
   for (let i = 1; i < match.length; match.groups[i - 1] = match[i++]);
   // match.groups = match.slice(1)
@@ -44,8 +45,12 @@ function matchMaker(labels, match, index, input) {
   return match
 }
 
-// var g = []
-// print(reParse(str, g))
+function repeat(str, count){
+  var res = '', n = count
+  if (n < 0 || n == Infinity) throw RangeError("Count can't be negative")
+  for (;n > 0; (n >>>= 1) && (str += str)) if (n & 1) res += str
+  return res
+}
 
 function Rexi(srcPattern, flags) {
   var [regPattern, labels, reReplace] = reParse(srcPattern)
@@ -113,7 +118,7 @@ Object.assign(Rexi.prototype, {
         // an escape sequence, with `reReplaceEscapes`, and must replace
         // the number of `$`s with half as many.
         if (m[len - 1] === '$')
-          return '$'.repeat(len/2)
+          return repeat('$', len/2)
 
         // Otherwise we trim the leading dollar off the match, and look
         // for the associated label, matched earlier, for the replacement.
