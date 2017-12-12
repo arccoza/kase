@@ -26,16 +26,17 @@ let fix = {
 //   console.timeEnd('kase')
 // }
 
-// console.time('kase')
-// for (var i = 0; i < 100000; i++) {
-//   kase('tCTTTe', 'any', 'kebab')
-// }
-// console.timeEnd('kase')
+console.time('kase')
+for (var i = 0; i < 100000; i++) {
+  kase('tCTTTe', 'any', 'kebab')
+}
+console.timeEnd('kase')
 
-print(kase('@@@-----CTTTeTmpppLateYYYYYY_YYYYi8_8', 'camel', 'kebab'))
-print(kase('@@@-----CTt-te-tmppp-late-yYYYYY_YYy-yi8-8', 'kebab', 'title'))
-print(kase('@@@-----CTt Te Tmppp Late YYYYYY_YYy Yi8 8', 'title', 'pascal'))
-print(kase('@@@-----CTtTeTmpppLateYYYYYY_YYyYi8_8', 'pascal', 'header'))
+// print(kase('@@@-----CTTTeTmpppLateYYYYYY_YYYYi8_8a----@@@@', 'camel'))
+// print(kase('@@@-----CTTTeTmpppLateYYYYYY_YYYYi8_8----@@@@', 'camel', 'kebab'))
+// print(kase('@@@-----CTt-te-tmppp-late-yYYYYY_YYy-yi8-8----@@@@', 'kebab', 'title'))
+// print(kase('@@@-----CTt Te Tmppp Late YYYYYY_YYy Yi8 8----@@@@', 'title', 'pascal'))
+// print(kase('@@@-----CTtTeTmpppLateYYYYYY_YYyYi8_8----@@@@', 'pascal', 'header'))
 
 // print(kase('-', 'any', 'camel'))
 
