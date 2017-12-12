@@ -37,9 +37,9 @@ var cases = {
   title: [new Rexi(reParts.start(' ', '[A-Z]') + '|' + reParts.split(' ', '[a-z]', '[A-Z]') + '|' + reParts.digit(' '),'g'),
     (a, b) => (a && lo(a) || '') + (a && b && ' ' || '') + (b && up(b) || '')],
   pascal: [new Rexi(reParts.camel() + '|' + reParts.start('_', '[A-Z]') + '|' + reParts.digit('_'),'g'),
-    (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : up(b)],
+  (a, b) => (a && lo(a) || '') + (a && b && isAnyDig(a + b) && '_' || '') + (b && up(b) || '')],
   header: [new Rexi(reParts.start('-', '[A-Z]') + '|' + reParts.split('-', '[a-z]', '[A-Z]') + '|' + reParts.digit('-'),'g'),
-  (a, b) => (a && lo(a) || '') + (a && b && '-' || '') + (b && up(b) || '')],
+    (a, b) => (a && lo(a) || '') + (a && b && '-' || '') + (b && up(b) || '')],
 }
 
 function kase(str, from, to) {
