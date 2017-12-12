@@ -23,7 +23,7 @@ var cases = {
   // any: [new Rexi(`((?<a>[a-z])(?<b>[A-Z])|(?<a>[A-Z])(?<b>[A-Z])(?=[a-z]))|(^[^a-zA-Z0-9]*(?<b>.))|((?<a>[a-zA-Z0-9]?)[^a-zA-Z0-9]+(?<b>[a-zA-Z0-9]?))`, 'g')],
   any: [new Rexi(reParts.camel() + '|' + reParts.start() + '|' + reParts.split(),'g')],
   camel: [new Rexi(reParts.camel() + '|' + reParts.start('_') + '|' + reParts.digit('_'),'g'),
-    (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : lo(b)],
+    (a, b) => (a && lo(a) || '') + (a && b && isAnyDig(a + b) && '_' || '') + (a && b && up(b) || b && lo(b) || '')],
   kebab: [new Rexi(reParts.start('-', '[^-]') + '|' + reParts.split('-', '[^-]', '[^-]'),'g'),
     (a, b) => generic(a, b, '-')],
   snake: [new Rexi(reParts.start('_', '[^_]') + '|' + reParts.split('_', '[^_]', '[^_]'),'g'),
@@ -37,7 +37,7 @@ var cases = {
   title: [new Rexi(reParts.start(' ', '[A-Z]') + '|' + reParts.split(' ', '[a-z]', '[A-Z]') + '|' + reParts.digit(' '),'g'),
     (a, b) => (a && lo(a) || '') + (a && b && ' ' || '') + (b && up(b) || '')],
   pascal: [new Rexi(reParts.camel() + '|' + reParts.start('_', '[A-Z]') + '|' + reParts.digit('_'),'g'),
-  (a, b) => (a && lo(a) || '') + (a && b && isAnyDig(a + b) && '_' || '') + (b && up(b) || '')],
+    (a, b) => (a && lo(a) || '') + (a && b && isAnyDig(a + b) && '_' || '') + (b && up(b) || '')],
   header: [new Rexi(reParts.start('-', '[A-Z]') + '|' + reParts.split('-', '[a-z]', '[A-Z]') + '|' + reParts.digit('-'),'g'),
     (a, b) => (a && lo(a) || '') + (a && b && '-' || '') + (b && up(b) || '')],
 }
