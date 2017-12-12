@@ -1,6 +1,6 @@
 'use strict'
 var print = console.log.bind(console)
-var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g
+var reNamed = /(?:\(\?[:=!])|(?:\(\?<(\S+?)>)|\(/g  // Matches named groups in a regex.
 var reReplaceEscapes = '(?:\\${2})+|'  // Matches any `$` with a preceding `$`.
 var str = `((?<foo>aa))|(bc)(?<foo>.)`
 
@@ -41,7 +41,7 @@ function matchMaker(labels, match, index, input) {
     if (k == null || v == null) continue
     match.labels[k] = v
   }
-  // print(match, labels)
+
   return match
 }
 
@@ -54,7 +54,6 @@ function repeat(str, count){
 
 function Rexi(srcPattern, flags) {
   var [regPattern, labels, reReplace] = reParse(srcPattern)
-  // print(reReplace)
 
   Object.defineProperty(this, '_re', {value: new RegExp(regPattern, flags), writable: false})
   Object.defineProperty(this, '_labels', {value: labels, writable: false})
@@ -138,12 +137,3 @@ Object.assign(Rexi.prototype, {
 })
 
 export {Rexi}
-
-// var re = new Rexi(str, 'g')
-// print(re.iterator)
-// var it = re.iterator('aabcd')
-// print(it.next(), it.index, it.next(), it.index, it.next(), it.index, it.next())
-// print(re.exec('aabcd'), re.lastIndex, re.exec('aabcd'), re.lastIndex, re.exec('aabcd'), re.lastIndex)
-// print(re.replace('aabcd', 'b'), re.lastIndex)
-// print('aabcd'.replace(re, 'b'))
-// print('12aabcd'.match(re))
