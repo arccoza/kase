@@ -9,16 +9,18 @@ let isUpperCase = str => !(/[a-z]/g).test(str)
 let isLowerCase = str => !(/[A-Z]/g).test(str)
 let isAnyDig = str => (/\d/g).test(str)
 let reParts = {
+  word: `[a-zA-Z0-9]`,
   nonWord: `[^a-zA-Z0-9]`,
   camel() {return `((?<a>[a-z])(?<b>[A-Z])|(?<a>[A-Z])(?<b>[A-Z])(?=[a-z]))`},
-  start(sep, b='.') {return `(^${sep || this.nonWord}*(?<b>${b}))`},
-  split(sep, a='.', b='.') {return `((?<a>${a}?)${sep || this.nonWord}+(?<b>${b}))`},
+  start(sep, b) {return `(^${sep || this.nonWord}*(?<b>${b || this.word}))`},
+  split(sep, a, b) {return `((?<a>${a || this.word}?)${sep || this.nonWord}+(?<b>${b || this.word}?))`},
   digit(sep) {return `((?<a>\\d?)${sep || this.nonWord}+(?<b>\\d))`},
 }
-let generic = (a, b, sep) => a != null ? lo(a) + sep + lo(b) : lo(b)
+// let generic = (a, b, sep) => a != null ? lo(a) + sep + lo(b) : lo(b)
+let generic = (a, b, sep) => (a && lo(a) || '') + (a && b && sep || '') + (b && lo(b) || '')
 
 var cases = {
-  // any: [new Rexi(`((?<a>[a-z])(?<b>[A-Z])|(?<a>[A-Z])(?<b>[A-Z])(?=[a-z]))|(^[^a-zA-Z0-9]*(?<b>.))|((?<a>.?)[^a-zA-Z0-9]+(?<b>.?))`, 'g')],
+  // any: [new Rexi(`((?<a>[a-z])(?<b>[A-Z])|(?<a>[A-Z])(?<b>[A-Z])(?=[a-z]))|(^[^a-zA-Z0-9]*(?<b>.))|((?<a>[a-zA-Z0-9]?)[^a-zA-Z0-9]+(?<b>[a-zA-Z0-9]?))`, 'g')],
   any: [new Rexi(reParts.camel() + '|' + reParts.start() + '|' + reParts.split(),'g')],
   camel: [new Rexi(reParts.camel() + '|' + reParts.start('_') + '|' + reParts.digit('_'),'g'),
     (a, b) => a != null ? lo(a) + (isAnyDig(a + b) ? '_' : '') + up(b) : lo(b)],
