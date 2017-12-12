@@ -16,7 +16,6 @@ let reParts = {
   split(sep, a, b) {return `((?<a>${a || this.word}?)${sep || this.nonWord}+(?<b>${b || this.word}?))`},
   digit(sep) {return `((?<a>\\d?)${sep || this.nonWord}+(?<b>\\d))`},
 }
-// let generic = (a, b, sep) => a != null ? lo(a) + sep + lo(b) : lo(b)
 let generic = (a, b, sep) => (a && lo(a) || '') + (a && b && sep || '') + (b && lo(b) || '')
 
 var cases = {
