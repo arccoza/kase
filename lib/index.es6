@@ -41,19 +41,30 @@ var cases = {
 }
 
 function kase(str, from, to) {
-  var re, fn
+  var re, fn, res = '', len, cur, pre = 0
   if (from == to) return str  // Short circuit if no conversion.
-  if (from != null && to == null)
+  if (from != null && to == null)  // If only a `to` arg is supplied.
     [from, to] = ['any', from]
 
   if (!(cases[from] && (re = cases[from][0])))
     throw new ReferenceError('Not a valid `from` argument.')
 
   if (!(cases[to] && (fn = cases[to][1])))
-    fn = false
+    fn = false  // If there is no matching fn in the `cases` dict.
 
-  return re.replace(str, ({labels: {a, b}}) => fn && fn(a, b) || generic(a, b, to))
+  // return re.replace(str, ({labels: {a, b}}) => fn && fn(a, b) || generic(a, b, to))
   // return re.replace(str, '$a-$b')
+
+  for(let m, a, b; m = re.exec(str); pre = cur + len) {
+    ({labels: {a, b}, index: cur, value: {length: len}} = m)
+    // Grab the unmatched parts of the string, and add them to the result.
+    cur > pre && (res += str.substring(pre, cur).toLowerCase())
+    // If `fn` doesn't exist use `generic` with `to` arg as seperator.
+    res += fn && fn(a, b) || generic(a, b, to)
+  }
+  res += str.substring(pre).toLowerCase()
+
+  return res
 }
 
 kase.isUpper = kase.isUpperCase = isUpperCase
