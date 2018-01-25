@@ -18,6 +18,10 @@ Supporting:
 
 or any custom seperator string you choose (eg. '@').
 
+## Install
+
+`yarn add kase` or `npm install kase`
+
 ## Example
 
 ### Input
